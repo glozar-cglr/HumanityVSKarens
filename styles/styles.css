@@ -24,4 +24,7 @@ img[alt*="shopCenter"] {
 
 canvas {
     border: 1px solid red;
+    background-image: url(../images/background/road.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
