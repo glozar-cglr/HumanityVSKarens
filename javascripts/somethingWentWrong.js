@@ -12,13 +12,7 @@ imgBckgFixed.src = "./images/background/road.png"
 
 //1.c. Get the image for the enemy Karens
 
-const imgKaren1 = new Image(),
-imgKaren2 = new Image(),
-imgKaren3 = new Image();
 
-imgKaren1.src = "./images/characters/Karen1.png";
-imgKaren2.src = "./images/characters/Karen 2.png";
-imgKaren3.src = "./images/characters/Karen3.png";
 
 //1.d. Get the images for the snipper/doctor and its bullet
 
