@@ -202,28 +202,28 @@ const karenTypes = [
         img: "./images/characters/Karen3.png",
         life: 10,
         power: 2,
-        resistance: 1,
         speed: -1,
         leftStretch: boxSize/3,
-        rightStretch: boxSize/4
+        rightStretch: boxSize/4,
+        score: 15
     },
     {
         img: "./images/characters/Karen 2.png",
         life: 20,
         power: 4,
-        resistance: 2,
         speed: -2,
         leftStretch: boxSize/4,
-        rightStretch:boxSize/4
+        rightStretch:boxSize/4,
+        score: 25
     },
     {
         img: "./images/characters/Karen1.png",
         life: 30,
         power: 6,
-        resistance: 2,
         speed: -3,
         leftStretch: boxSize/5,
         rightStretch: boxSize/5,
+        score: 50
     }
 ];
 
@@ -237,7 +237,7 @@ class Karen {
         this.speed = object.speed
         this.life = object.life;
         this.power = object.power;
-        this.resistance = object.resistance;
+        this.score = object.score;
         this.type = "karen";
         this.img = new Image();
         this.img.src= object.img;
@@ -277,6 +277,7 @@ function generateKarens () {
 function drawKarens () {
     karens.forEach(function(karen, idKaren){
         if (karen.life <=0) {
+            score += karen.score;
             karens.splice(idKaren,1)
         } if (karen.x+ karen.width < 0){
             karens.splice(idKaren,1)
@@ -298,6 +299,10 @@ function drawKarens () {
     });
 };
 
+function printScore() {
+    document.getElementById("printScore").innerHTML = score;
+}
+
 function start() {
         frames++;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -306,6 +311,7 @@ function start() {
         doctor.draw();
         generateKarens();
         drawKarens();
+        printScore();
         if (!requestId) {return false} else {
             requestId = requestAnimationFrame(start)
         }
