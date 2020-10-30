@@ -17,20 +17,16 @@ const numRows = 6;
 const height = canvas.height*0.85
 const boxSize = height/numRows;
 const row = [
-    {y: yOffSet-boxSize*0.3,
-    characters: []},
-    {y: yOffSet+boxSize-boxSize*0.3,
-    characters: []},
-    {y: yOffSet+boxSize*2-boxSize*0.3,
-    characters: []},
-    {y: yOffSet+boxSize*3-boxSize*0.3,
-    characters: []},
-    {y: yOffSet+boxSize*4-boxSize*0.3,
-    characters: []},
-    {y: yOffSet+boxSize*5-boxSize*0.3,
-    characters: []}
+    {y: yOffSet-boxSize*0.3},
+    {y: yOffSet+boxSize-boxSize*0.3},
+    {y: yOffSet+boxSize*2-boxSize*0.3},
+    {y: yOffSet+boxSize*3-boxSize*0.3},
+    {y: yOffSet+boxSize*4-boxSize*0.3},
+    {y: yOffSet+boxSize*5-boxSize*0.3}
 ]
-const charHeight = boxSize*1.2
+const charHeight = boxSize*1.2;
+let collisionImg = new Image();
+collisionImg.src = "./images/characters/boom.png";
 
 //3. Setting the background correctly
 
@@ -97,7 +93,7 @@ class Vaccine {
         this.speed = 3;
         this.width = 40;
         this.height = 10;
-        this.power = 2;
+        this.power = 5;
         this.type = "vaccine";
 
         const img = new Image ();
@@ -107,25 +103,22 @@ class Vaccine {
             this.draw();
         });
 
-        row[loc].characters.push(this);
-        this.rowId = row[loc].characters.lenght -1
     }
 
     move() {
         this.x += this.speed;
-        if (this.x > canvas.width) {
-            vaccines.splice(vaccines.indexOf(this),1);
-        };
     };
 
     draw() {
         this.move();
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+        if (this.x > canvas.width) {
+            vaccines.splice(vaccines.indexOf(this),1);
+        } else {ctx.drawImage(this.img, this.x, this.y, this.width, this.height)}
     };
 
     collision (karen){
-        return(this.x<karen.x+karen.width && 
-            this.x + this.width > karen.x &&
+        return(this.x<karen.rightLimit && 
+            this.x + this.width > karen.leftLimit &&
             this.y < karen.y + karen.height &&
             this.y + this.height > karen.y)
 
@@ -148,9 +141,11 @@ class Shooter {
         this.row = 3
         this.x = 0;
         this.width = boxSize;
-        this.height = boxSize*1.2;
+        this.height = charHeight;
         this.life = 20;
-        this.type = "shooter"
+        this.type = "shooter";
+        this.leftLimit = 5;
+        this.rightLimit = boxSize - 25
 
         const img = new Image ();
         img.src = "./images/characters/sniper.png";
@@ -159,27 +154,21 @@ class Shooter {
             this.draw();
         })
         
-        row[3].characters.push(this)
     };
 
     move(event) {
         switch (event) {
             case 87:
                 if (this.row > 0) {
-                    row[this.row].characters.shift();
                     this.row--;
                     this.y = row[this.row].y;
-                    row[this.row].characters.unshift(this);
                 }
                 break;
             case 83: 
                 if (this.row < 5) {
-                    row[this.row].characters.shift();
                     this.row++;
                     this.y = row[this.row].y;
-                    row[this.row].characters.unshift(this);
             }
-                break;
         }
     };
 
@@ -188,14 +177,16 @@ class Shooter {
     };
 
     shoot() {
-        vaccines.push(new Vaccine(this.x + boxSize*0.2,this.y + this.height/2,this.row));
+        vaccines.push(new Vaccine(this.x + boxSize*0.2,this.y + this.height/2));
+        console.log(vaccines);
     };
 
     collision (karen){
-        return(this.x<karen.x+karen.width && 
-            this.x + this.width > karen.x &&
+        return(this.leftLimit<karen.rightLimit && 
+            this.rightLimit > karen.leftLimit &&
             this.y < karen.y + karen.height &&
-            this.y + this.height > karen.y) 
+            this.y + this.height > karen.y &&
+            this.row == karen.row) 
     };
 
 }
@@ -208,34 +199,41 @@ const doctor = new Shooter()
 
 const karenTypes = [
     {
-        img: "./images/characters/Karen1.png",
+        img: "./images/characters/Karen3.png",
         life: 10,
         power: 2,
         resistance: 1,
-        speed: -1
+        speed: -1,
+        leftStretch: boxSize/3,
+        rightStretch: boxSize/4
     },
     {
         img: "./images/characters/Karen 2.png",
         life: 20,
         power: 4,
         resistance: 2,
-        speed: -2
+        speed: -2,
+        leftStretch: boxSize/4,
+        rightStretch:boxSize/4
     },
     {
-        img: "./images/characters/Karen3.png",
+        img: "./images/characters/Karen1.png",
         life: 30,
         power: 6,
         resistance: 2,
-        speed: -3
+        speed: -3,
+        leftStretch: boxSize/5,
+        rightStretch: boxSize/5,
     }
 ];
 
 class Karen {
-    constructor (x, y, object) {
-        this.x = x;
-        this.y = y;
-        this.width = 100;
-        this.height = 200;
+    constructor (loc, object) {
+        this.x = canvas.width;
+        this.y = row[loc].y;
+        this.row = loc;
+        this.width = boxSize;
+        this.height = charHeight;
         this.speed = object.speed
         this.life = object.life;
         this.power = object.power;
@@ -243,10 +241,14 @@ class Karen {
         this.type = "karen";
         this.img = new Image();
         this.img.src= object.img;
+        this.leftLimit = canvas.width + object.leftStretch;
+        this.rightLimit = canvas.width + this.width - object.rightStretch;
     };
 
     move() {
-        this.x -= 3;
+        this.x += this.speed;
+        this.leftLimit  += this.speed;
+        this.rightLimit += this.speed;
     };
 
     draw() {
@@ -264,9 +266,9 @@ class Karen {
 
 // Generate and draw Karens
 function generateKarens () {
-    const y = Math.floor(Math.random()*6)
+    const loc = Math.floor(Math.random()*6)
     const karentype = karenTypes[Math.floor(Math.random()*3)]
-    const karen = new Karen(canvas.width,y*60,karentype);
+    const karen = new Karen(loc,karentype);
     if(frames % 100 == 0) {
         karens.push(karen);
     }
@@ -279,16 +281,18 @@ function drawKarens () {
         } if (karen.x+ karen.width < 0){
             karens.splice(idKaren,1)
         }
+        karen.draw();
         if (doctor.collision(karen)) {
             console.log("se acaba el juego")
+            ctx.drawImage(collisionImg, doctor.rightLimit-10, doctor.y + doctor.height/4, 50,50)
             requestId = undefined
         }
-        karen.draw();
         vaccines.forEach(function (vaccine, iV) {
             if (vaccine.collision(karen)) {
                 vaccines.splice(iV,1);
                 vaccine.hit(karen);
             };
+            console.log(vaccine)
             vaccine.draw();
         })
     });
