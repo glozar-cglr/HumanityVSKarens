@@ -1,30 +1,114 @@
-#game {
+body {
+    background: #022737;
+    margin: 0px;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Fjalla One", sans-serif;
+    color: #f4b606;
+  }
+  h1 {
     display: flex;
-    flex-direction: column;
+    margin: 0 20px;
+    min-width: 40px;
+    font-size: 2.8em;
+  }
+  h3 {
+    margin: 5px;
+    color: #fce260;
+    font-size: 30px;
+  }
+  p {
+    font-family: "Fjalla One", sans-serif;
+    color: white;
+  }
+  header {
+    display: flex;
+    justify-content: space-around;
     align-items: center;
-}
-
-#game div{
-    width: 1600px;
+    padding: 20px;
+    max-width: 1200px;
+    width: 80%;
+    margin: 0 auto;
+  }
+  .logo {
+    width: 30%;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-}
+  }
+  .logo img {
+    height: 120px;
+  }
 
-img[alt*="shopCenter"] {
-    height: 250px !important;
-}
+  canvas {
+    border-radius: 20px;
+    border: 6px solid #022737;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.6);
+    margin-top: 20px;
+    width: 100%;
+  }
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+  }
 
-#game div img{
-    height: 180px;
-    margin: 0 -5px;
-    padding: 0;
-}
-
-
-canvas {
-    border: 1px solid red;
-    background-image: url(../images/background/road.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-}
+  #goToGame {
+    margin-top: 5%;
+    margin-bottom: 2%;
+  }
+  .contain {
+    margin: 30px auto 0px auto;
+    max-width: 1200px;
+    display: flex;
+  }
+  
+  /* Index section styles */
+  .index img {
+    width: 550px;
+    margin-top: 10%;
+    height: auto;
+  }
+  button,
+  button a {
+    background: #f4b606 ;
+    font-size: 40px;
+    border: none;
+    color: white;
+    text-decoration: none;
+    margin-top: 10%;
+    font-family: "Fjalla One", sans-serif;
+  }
+  
+  @keyframes bounce {
+    0%,
+    20%,
+    60%,
+    100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+    }
+  
+    40% {
+      -webkit-transform: translateY(-20px);
+      transform: translateY(-20px);
+    }
+  
+    80% {
+      -webkit-transform: translateY(-10px);
+      transform: translateY(-10px);
+    }
+  }
+  
+  button:hover {
+    animation: bounce 1s;
+  }
+  /* Instructions section styles */
+ 
