@@ -20,7 +20,7 @@ body {
   h3 {
     margin: 5px;
     color: #fce260;
-    font-size: 30px;
+    font-size: 20px;
   }
   p {
     font-family: "Fjalla One", sans-serif;
@@ -36,20 +36,158 @@ body {
     margin: 0 auto;
   }
   .logo {
-    width: 30%;
+    width: 50%;
     display: flex;
     justify-content: center;
+    background-color: white;
+    border-radius: 50px;
+    border: 10px solid rgba(255 , 255, 255, 0.2);
+    height: 240px;
+    box-sizing: content-box;
+    padding-top: 20px;
+    margin-top: 5%;
   }
   .logo img {
-    height: 120px;
+    height: 200px;
   }
 
+  #logoDiv {
+    margin: 50px 0 0;
+    background: white;
+    padding-bottom: 65px;
+    width: 700px;
+    height: 500px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .introduction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px auto;
+    width: 90%;
+  }
+
+  .introduction p {
+    font-size: 30px;
+    margin: 60px 0;
+  }
+
+  .karens {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 100px 0 0;
+  }
+
+  .karens img {
+    height: 400px;
+  }
+
+  h2 {
+    font-size: 60px;
+    color: white;
+  }
+
+  .characters {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #charactersDiv{
+    width: 90%;;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #charactersDiv > div {
+    width: 30%;
+    text-align: center;
+    font-size: 30px;
+    border-radius: 50px;
+    border: 2px solid white;
+  }
+
+  #charactersDiv img {
+    height: 260px;
+    max-width: 100%;
+  }
+
+  .doctor,
+  .move {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .move > div{
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .move > div p {
+    font-size: 16px !important;
+    margin-top: auto;
+  }
+
+  .move img{
+    height: 50px;
+  }
+
+  .Enemies > div {
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .Enemies > div > div {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin: 0 auto 60px;
+  }
+
+  .Enemies img {
+    height: 150px !important;
+  }
+
+  .Enemies {
+    box-sizing: border-box;
+  }
+
+  .weapons {
+    display: flex;
+    width: 90%;
+    margin: 90px auto;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: auto;
+  }
+
+  .weapons > div {
+    width: 30%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .weapons img {
+    height: 150px;
+  }
 
   .container {
     max-width: 1300px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
   }
@@ -58,11 +196,7 @@ body {
     margin-top: 5%;
     margin-bottom: 2%;
   }
-  .contain {
-    margin: 30px auto 0px auto;
-    max-width: 1200px;
-    display: flex;
-  }
+
   
   /* Index section styles */
   .index img {
@@ -70,16 +204,37 @@ body {
     margin-top: 10%;
     height: auto;
   }
+
   button,
-  button a {
+  button a{
     background: #f4b606 ;
-    font-size: 40px;
+    font-size: 50px;
     border: none;
     color: white;
     text-decoration: none;
-    margin-top: 10%;
+    margin-top: 5%;
     font-family: "Fjalla One", sans-serif;
+    width: 300px;
+    height: 100px;
+    border-radius: 30px;
+
   }
+
+  .contain{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 200px;
+  }
+
+  #goToGame {
+    width: 500px;
+  }
+
+  button {
+    box-shadow: -10px 10px rgba(255 , 255, 255, 0.2) 
+  }
+
+
   
   @keyframes bounce {
     0%,
@@ -103,6 +258,36 @@ body {
   
   button:hover {
     animation: bounce 1s;
+  }
+
+  #gameTop {
+    margin: 10px auto;
+    width: 950px;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background-image: url("../images/otherAssets/wood.jpeg");
+    background-color: rgba(2,39,55,0.3);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .top-section {
+    display: flex;
+  }
+
+  .top-section h1{
+    width: 100px;
+  }
+
+  #points {
+    padding-left: 10px;
+    box-sizing: border-box;
+  }
+
+  .top-section img {
+    height: 50px;
   }
   /* Instructions section styles */
  

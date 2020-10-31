@@ -11,21 +11,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
   </head>
   <body>
-    <header>
-      <div id="information">
+    <header id="gameTop">
+      <div id="information" class="top-section">
+        <img src="./images/characters/information.png" alt="information">
         <h1 id="energy">Energy</h1>
       </div>
 
-      <div class="logo">
-        <img src="./images/logo.png" alt="Run Paco, run" />
-      </div>
-
-      <div id="score">
-        <h1 id="printScore">Print Score</h1>
+      <div id="score" class="top-section">
+        <div>
+        <h1 id="points">Points:</h1>
+        </div>
+        <h1 id="printScore">0</h1>
       </div>
     </header>
     <section class="container canvasContainer">
-      <canvas id="canvas" width="1000" height="600"></canvas>
+      <canvas id="canvas" width="900" height="500"></canvas>
     </section>
    
     <!-- Script -->
