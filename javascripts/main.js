@@ -194,12 +194,14 @@ class Shooter {
     move(event) {
         switch (event) {
             case 87:
+            case 38:
                 if (this.row > 0) {
                     this.row--;
                     this.y = row[this.row].y;
                 }
                 break;
             case 83: 
+            case 40:
                 if (this.row < 5) {
                     this.row++;
                     this.y = row[this.row].y;
@@ -369,7 +371,7 @@ function start() {
 
 addEventListener("keydown", function (event) {
     event.preventDefault()
-    if (event.keyCode === 87 || event.keyCode === 83) {
+    if (event.keyCode === 87 || event.keyCode === 83 || event.keyCode === 38 || event.keyCode === 40) {
         doctor.move(event.keyCode)
     } if (event.keyCode === 32) {
         doctor.shoot();
