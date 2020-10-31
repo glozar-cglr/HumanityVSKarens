@@ -353,7 +353,7 @@ function generateKarensLvl3 () {
 
 function generateKarensLvl4 () {
     const loc = Math.floor(Math.random()*6)
-    const karentype = karenTypes[3]
+    const karentype = karenTypes[2]
     const karen = new Karen(loc,karentype);
     if(frames % karenFrameGeneration == 0) {
         karens.push(karen);
@@ -364,13 +364,13 @@ function generateKarens () {
     ctx.fillStyle = "red"
     ctx.font = "30px Fjalla One"
     ctx.textAlign = "center"
-    frames % 1000 == 0? karenFrameGeneration -= 5 : null;
-    frames < 1500 ? generateKarensLvl1() : 
-    frames < 2000 ? ctx.fillText("The worst is yet to come...", canvas.width/2, yOffSet + 30) :
-    frames < 3000 ? generateKarensLvl2() :
-    frames < 3500 ? ctx.fillText("More are coming...", canvas.width/2, yOffSet + 30):
-    frames < 4500 ? generateKarensLvl3() :
-    frames < 5000 ? ctx.fillText("Your time to survive...", canvas.width/2, yOffSet + 30) :
+    frames % 500 == 0? karenFrameGeneration -= 5 : null;
+    frames < 1000 ? generateKarensLvl1() : 
+    frames < 1500 ? ctx.fillText("The worst is yet to come...", canvas.width/2, yOffSet + 30) :
+    frames < 2500 ? generateKarensLvl2() :
+    frames < 3000 ? ctx.fillText("More are coming...", canvas.width/2, yOffSet + 30):
+    frames < 4000 ? generateKarensLvl3() :
+    frames < 4500 ? ctx.fillText("Your time to survive...", canvas.width/2, yOffSet + 30) :
     generateKarensLvl4();
 }
 
@@ -394,21 +394,25 @@ function drawKarens () {
             karen.attack(doctor);
             doctor.life <= 0 ? gameOver() : null;
         }
-        colissions.forEach(function (boom, iB){
-            boom.draw();
-        })
 
         vaccines.forEach(function (vaccine, iV) {
             if (vaccine.collision(karen)) {
                 vaccines.splice(iV,1);
                 vaccine.hit(karen);
-            } else {vaccine.draw(
-            )};
+            };
         })
         
         
     });
 };
+
+function drawAssets () {
+    colissions.forEach(function (boom){
+        boom.draw();
+    })
+
+    vaccines.forEach(vaccine => vaccine.draw())
+}
 
 function printScore() {
     document.getElementById("printScore").innerHTML = score;
@@ -448,6 +452,7 @@ function start() {
     background.drawMovable();
     background.drawFixed();
     doctor.draw();
+    drawAssets();
     generateKarens();
     drawKarens();
     printScore();
