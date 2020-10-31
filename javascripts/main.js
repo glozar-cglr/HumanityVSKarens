@@ -5,6 +5,7 @@ let ctx = canvas.getContext("2d");
 //2. Will place here the variables to use along the code
 
 let frames = 0;
+let karenFrameGeneration = 120
 let energy = 50;
 let karens = [];
 const vaccines = [];
@@ -29,7 +30,13 @@ const charHeight = boxSize*1.2;
 let collisionImg = new Image();
 collisionImg.src = "./images/characters/boom.png";
 let vaccineImg = new Image();
-vaccineImg.src = "./images/characters/vaccine.png"
+vaccineImg.src = "./images/characters/vaccine.png";
+let logoImg = new Image();
+logoImg.src = "./images/logo.png";
+let gameOverImg = new Image();
+gameOverImg.src = "./images/otherAssets/gameOver.gif";
+let enterKey = new Image();
+enterKey.src = "./images/otherAssets/enterKey.png"
 
 // Bringing the audios to be used in the game 
 
@@ -103,6 +110,7 @@ class Background {
         ctx.drawImage(this.imageFixed, 0, yOffSet, canvas.width, (canvas.height-yOffSet));
         this.grid();
     }
+
 }
 
 const background = new Background();
@@ -226,10 +234,15 @@ class Shooter {
             this.row == karen.row) 
     };
 
+    printLife () {
+        document.getElementById("printLife").innerHTML = this.life
+    }
+
 }
 
 const doctor = new Shooter()
-
+doctor.printLife();
+window.addEventListener("load", () => {firstScreen();})
 
 // 4. Defining the aspects of the karens
 
@@ -247,7 +260,7 @@ const karenTypes = [
     {
         img: "./images/characters/Karen 2.png",
         life: 20,
-        power: 4,
+        power: 3,
         speed: -2,
         leftStretch: boxSize/4,
         rightStretch:boxSize/4,
@@ -256,7 +269,7 @@ const karenTypes = [
     {
         img: "./images/characters/Karen1.png",
         life: 30,
-        power: 6,
+        power: 5,
         speed: -3,
         leftStretch: boxSize/5,
         rightStretch: boxSize/5,
@@ -293,23 +306,72 @@ class Karen {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     };
 
+    attack(doctor){
+        doctor.life -= this.power;
+        colissions.push(new BoomCollision(this.x-boxSize/3, this.y + boxSize/4,boxSize/2,boxSize/2))
+        this.x += 150
+        this.leftLimit += 150;
+        this.rightLimit += 150;
+    }
+
 }
 
 // Functions to draw and generate
 
-//     Function to draw the vaccines 
-
-
 
 // Generate and draw Karens
-function generateKarens () {
+function generateKarensLvl1 () {
     const loc = Math.floor(Math.random()*6)
-    const karentype = karenTypes[Math.floor(Math.random()*3)]
+    const karentype = karenTypes[Math.floor(Math.random()*2)]
     const karen = new Karen(loc,karentype);
-    if(frames % 100 == 0) {
+    if(frames % karenFrameGeneration == 0) {
+        console.log(karenFrameGeneration)
         karens.push(karen);
     }
 }
+
+function generateKarensLvl2 () {
+    const loc = Math.floor(Math.random()*6)
+    const karentype = karenTypes[Math.floor(Math.random()*3)]
+    const karen = new Karen(loc,karentype);
+    if(frames % karenFrameGeneration == 0) {
+        karens.push(karen);
+    }
+}
+
+function generateKarensLvl3 () {
+    const loc = Math.floor(Math.random()*6)
+    const karentype = karenTypes[Math.floor(Math.random()*2)+1]
+    const karen = new Karen(loc,karentype);
+    if(frames % karenFrameGeneration == 0) {
+        karens.push(karen);
+    }
+}
+
+function generateKarensLvl4 () {
+    const loc = Math.floor(Math.random()*6)
+    const karentype = karenTypes[3]
+    const karen = new Karen(loc,karentype);
+    if(frames % karenFrameGeneration == 0) {
+        karens.push(karen);
+    }
+}
+
+function generateKarens () {
+    ctx.fillStyle = "red"
+    ctx.font = "30px Fjalla One"
+    ctx.textAlign = "center"
+    frames % 1000 == 0? karenFrameGeneration -= 5 : null;
+    frames < 1500 ? generateKarensLvl1() : 
+    frames < 2000 ? ctx.fillText("The worst is yet to come...", canvas.width/2, yOffSet + 30) :
+    frames < 3000 ? generateKarensLvl2() :
+    frames < 3500 ? ctx.fillText("More are coming...", canvas.width/2, yOffSet + 30):
+    frames < 4500 ? generateKarensLvl3() :
+    frames < 5000 ? ctx.fillText("Your time to survive...", canvas.width/2, yOffSet + 30) :
+    generateKarensLvl4();
+}
+
+
 
 function drawKarens () {
     karens.forEach(function(karen, idKaren){
@@ -318,15 +380,17 @@ function drawKarens () {
             colissions.push(new BoomCollision(karen.x, karen.y, karen.height, karen.width));
             audioKarenDeath.play();
             karens.splice(idKaren,1)
-        } if (karen.x+ karen.width < 0){
-            karens.splice(idKaren,1)
-        }
+        };
         karen.draw();
-        if (doctor.collision(karen)) {
-            ctx.drawImage(collisionImg, doctor.rightLimit-10, doctor.y + doctor.height/4, 50,50)
+        if (karen.leftLimit < 0){
+            karens.splice(idKaren,1)
             gameOver();
         }
-
+        if (doctor.collision(karen)) {
+            doctor.life
+            karen.attack(doctor);
+            doctor.life <= 0 ? gameOver() : null;
+        }
         colissions.forEach(function (boom, iB){
             boom.draw();
         })
@@ -345,13 +409,33 @@ function drawKarens () {
 
 function printScore() {
     document.getElementById("printScore").innerHTML = score;
+    document.getElementById("printLife").innerHTML = doctor.life
 }
 
 function gameOver() {
     audioBackground.pause();
     audioGameOver.play();
     console.log("se acaba el juego");
+    ctx.fillStyle = "white"
+    ctx.fillRect(canvas.width/8,yOffSet,canvas.width - canvas.width/4, canvas.height - yOffSet*2)
+    ctx.drawImage(logoImg,canvas.width/4,yOffSet + 30,canvas.width - canvas.width/2, 150)
+    ctx.drawImage(gameOverImg,canvas.width/3,yOffSet+150,canvas.width - canvas.width/1.5,120)
+    ctx.font =  "20px Fjalla One"
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#022737";
+    ctx.fillText(`The Karens took over. You reached ${score} points`, canvas.width/2, yOffSet+300, canvas.width - canvas.width/3)
     requestId = undefined;
+}
+
+function firstScreen() {
+    ctx.fillStyle = "white"
+    ctx.fillRect(canvas.width/8,yOffSet,canvas.width - canvas.width/4, canvas.height - yOffSet*2)
+    ctx.drawImage(logoImg,canvas.width/4,yOffSet + 30,canvas.width - canvas.width/2, 150)
+    ctx.drawImage(enterKey,canvas.width/2.3,yOffSet+200,canvas.width - canvas.width/1.15,50)
+    ctx.font =  "20px Fjalla One"
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#022737";
+    ctx.fillText(`Press ENTER to start`, canvas.width/2, yOffSet+300, canvas.width - canvas.width/3)
 }
 
 function start() {
