@@ -318,6 +318,9 @@ class Karen {
 
 // Functions to draw and generate
 
+//     Function to draw the vaccines 
+
+
 
 // Generate and draw Karens
 function generateKarensLvl1 () {
