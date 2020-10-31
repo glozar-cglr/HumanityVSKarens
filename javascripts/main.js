@@ -31,6 +31,24 @@ collisionImg.src = "./images/characters/boom.png";
 let vaccineImg = new Image();
 vaccineImg.src = "./images/characters/vaccine.png"
 
+// Bringing the audios to be used in the game 
+
+let audioBackground = new Audio();
+audioBackground.loop = true;
+audioBackground.src = "./audios/backgroundAudio.m4a";
+
+let audioKarenDeath = new Audio();
+audioKarenDeath.loop = false;
+audioKarenDeath.stc = "./audios/karenDeath.mp3";
+
+let audioKarenHit = new Audio();
+audioKarenHit.loop = false;
+audioKarenHit.src = "./audios/karenHit.mp3";
+
+let audioGameOver = new Audio();
+audioGameOver.loop = false;
+audioGameOver.src = "./audios/GameOver.mp3"
+
 //3. Setting the background correctly
 
 class Background {
@@ -295,16 +313,16 @@ function drawKarens () {
     karens.forEach(function(karen, idKaren){
         if (karen.life <=0) {
             score += karen.score;
-            colissions.push(new BoomCollision(karen.x, karen.y, karen.height, karen.width))
+            colissions.push(new BoomCollision(karen.x, karen.y, karen.height, karen.width));
+            audioKarenDeath.play();
             karens.splice(idKaren,1)
         } if (karen.x+ karen.width < 0){
             karens.splice(idKaren,1)
         }
         karen.draw();
         if (doctor.collision(karen)) {
-            console.log("se acaba el juego")
             ctx.drawImage(collisionImg, doctor.rightLimit-10, doctor.y + doctor.height/4, 50,50)
-            requestId = undefined
+            gameOver();
         }
 
         colissions.forEach(function (boom, iB){
@@ -327,18 +345,26 @@ function printScore() {
     document.getElementById("printScore").innerHTML = score;
 }
 
+function gameOver() {
+    audioBackground.pause();
+    audioGameOver.play();
+    console.log("se acaba el juego");
+    requestId = undefined;
+}
+
 function start() {
-        frames++;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        background.drawMovable();
-        background.drawFixed();
-        doctor.draw();
-        generateKarens();
-        drawKarens();
-        printScore();
-        if (!requestId) {return false} else {
-            requestId = requestAnimationFrame(start)
-        }
+    audioBackground.play();
+    frames++;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    background.drawMovable();
+    background.drawFixed();
+    doctor.draw();
+    generateKarens();
+    drawKarens();
+    printScore();
+    if (!requestId) {return false} else {
+        requestId = requestAnimationFrame(start)
+    }
 };
 
 addEventListener("keydown", function (event) {
