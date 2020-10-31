@@ -6,10 +6,12 @@ let ctx = canvas.getContext("2d");
 
 let frames = 0;
 let karenFrameGeneration = 120
-let energy = 50;
+let energy = 25;
 let karens = [];
 const vaccines = [];
 const colissions = [];
+const towers = [];
+const managers = [];
 let countVaccines = 0;
 let score = 0;
 let interval;
@@ -31,6 +33,12 @@ let collisionImg = new Image();
 collisionImg.src = "./images/characters/boom.png";
 let vaccineImg = new Image();
 vaccineImg.src = "./images/characters/vaccine.png";
+let nurseImg = new Image();
+nurseImg.src = "./images/characters/nurse.png";
+let managerImg = new Image();
+managerImg.src = "./images/characters/manager.png";
+let energyImg = new Image();
+energyImg.src = "./images/characters/5gTower.png";
 let logoImg = new Image();
 logoImg.src = "./images/logo.png";
 let gameOverImg = new Image();
@@ -223,7 +231,6 @@ class Shooter {
 
     shoot() {
         vaccines.push(new Vaccine(this.x + boxSize*0.2,this.y + this.height/2));
-        console.log(vaccines);
     };
 
     collision (karen){
@@ -243,6 +250,61 @@ class Shooter {
 const doctor = new Shooter()
 doctor.printLife();
 window.addEventListener("load", () => {firstScreen();})
+
+// 3.5 Defining my assets
+
+class Manager {
+    constructor(x,loc){
+        this.x = x;
+        this.y = row[loc].y;
+        this.row = loc
+        this.life = 20;
+        this.width = boxSize;
+        this.height = charHeight;
+        this.leftLimit = x +5;
+        this.rightLimit = x + boxSize - 20;
+        this.img = managerImg;
+    }
+
+    collision (karen){
+        return(this.leftLimit<karen.rightLimit && 
+            this.rightLimit > karen.leftLimit &&
+            this.y < karen.y + karen.height &&
+            this.y + this.height > karen.y &&
+            this.row == karen.row) 
+    }
+
+    draw() {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    };
+}
+
+class Energy extends Manager {
+    constructor(x,y) {
+        super (x,y);
+        this.counter = 0
+        this.img = energyImg;
+    }
+
+    recharge() {
+        this.counter % 200 == 0 ? energy += 5: null;
+    };
+
+    collision (karen){
+        return(this.leftLimit<karen.rightLimit && 
+            this.rightLimit > karen.leftLimit &&
+            this.y < karen.y + karen.height &&
+            this.y + this.height > karen.y &&
+            this.row == karen.row) 
+    };
+
+    draw() {
+        this.counter +=1;
+        this.recharge();
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    };
+}
+
 
 // 4. Defining the aspects of the karens
 
@@ -401,6 +463,20 @@ function drawKarens () {
                 vaccine.hit(karen);
             };
         })
+
+        managers.forEach(function(manager, iM) {
+            if(manager.collision(karen)) {
+                karen.attack(manager);
+                manager.life <= 0 ? managers.splice(iM,1): null;
+            }
+        })
+
+        towers.forEach(function(energy, iE) {
+            if(energy.collision(karen)) {
+                karen.attack(energy);
+                energy.life <= 0 ? towers.splice(iE,1) : null;
+            }
+        })
         
         
     });
@@ -410,13 +486,17 @@ function drawAssets () {
     colissions.forEach(function (boom){
         boom.draw();
     })
-
-    vaccines.forEach(vaccine => vaccine.draw())
+    vaccines.forEach(vaccine => vaccine.draw());
+    managers.forEach(manager => manager.draw());
+    towers.forEach(tower => tower.draw())
 }
+
+// Making the function to create the assets
 
 function printScore() {
     document.getElementById("printScore").innerHTML = score;
-    document.getElementById("printLife").innerHTML = doctor.life
+    document.getElementById("printLife").innerHTML = doctor.life;
+    document.getElementById("energy").innerHTML = energy
 }
 
 function gameOver() {
@@ -472,4 +552,17 @@ addEventListener("keydown", function (event) {
     }
 }) 
 
+canvas.addEventListener("click",createClick)
 
+function createClick(e) {
+    if (Math.floor(e.offsetX/boxSize) !== 1 && e.offsetY > yOffSet){
+        if (document.getElementById("5gTower").checked && energy >= 10){
+            energy -= 10;
+            towers.push(new Energy(Math.floor(e.offsetX/boxSize)*boxSize,Math.floor(e.offsetY/boxSize)-1))
+        }
+        if (document.getElementById("manager").checked && energy >= 15){
+            energy -= 15;
+            managers.push(new Manager(Math.floor(e.offsetX/boxSize)*boxSize,Math.floor(e.offsetY/boxSize)-1))
+        }
+    }
+}
