@@ -289,5 +289,44 @@ body {
   .top-section img {
     height: 50px;
   }
+
+  #buttons {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+
+  #buttons > div {
+    margin: 20px 0;
+    box-sizing: border-box;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+
+  #buttons input{
+    visibility: hidden;
+  }
+
+  #buttons label{
+    height: 100px;
+    margin: 10px 20px;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 50px;
+  }
+
+  #buttons img {
+    height: 90px;
+  }
+
+  :checked + label {
+    background-color: #f4b606 !important;
+  }
   /* Instructions section styles */
  
