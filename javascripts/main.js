@@ -5,9 +5,10 @@ let ctx = canvas.getContext("2d");
 //2. Will place here the variables to use along the code
 
 let frames = 0;
+let energy = 50;
 let karens = [];
-const energy = 50;
 const vaccines = [];
+const colissions = [];
 let countVaccines = 0;
 let score = 0;
 let interval;
@@ -27,6 +28,8 @@ const row = [
 const charHeight = boxSize*1.2;
 let collisionImg = new Image();
 collisionImg.src = "./images/characters/boom.png";
+let vaccineImg = new Image();
+vaccineImg.src = "./images/characters/vaccine.png"
 
 //3. Setting the background correctly
 
@@ -86,8 +89,10 @@ class Background {
 
 const background = new Background();
 
+
+
 class Vaccine {
-    constructor(x,y,loc) {
+    constructor(x,y) {
         this.x = x;
         this.y = y;
         this.speed = 3;
@@ -95,13 +100,7 @@ class Vaccine {
         this.height = 10;
         this.power = 5;
         this.type = "vaccine";
-
-        const img = new Image ();
-        img.src = "./images/characters/vaccine.png";
-        img.addEventListener("load", () => {
-            this.img = img;
-            this.draw();
-        });
+        this.img = vaccineImg;
 
     }
 
@@ -122,15 +121,33 @@ class Vaccine {
             this.y < karen.y + karen.height &&
             this.y + this.height > karen.y)
 
-        
     };
-
-
 
     hit (object){
         object.life -= this.power
     };
 
+}
+
+// Creating a Class that will allow me to show a boom when it collides
+
+class BoomCollision {
+    constructor (x, y, height, width) {
+        this.count = 0;
+        this.x = x;
+        this.y = y;
+        this.height = height;
+        this.width = width;
+        this.img = collisionImg;
+    };
+
+    draw () {
+        this.count += 1;
+        if (this.count > 15) {
+            colissions.splice(colissions.indexOf(this),1);
+        } else {ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        }
+    };
 }
 
 // Working on the Shooter
@@ -278,6 +295,7 @@ function drawKarens () {
     karens.forEach(function(karen, idKaren){
         if (karen.life <=0) {
             score += karen.score;
+            colissions.push(new BoomCollision(karen.x, karen.y, karen.height, karen.width))
             karens.splice(idKaren,1)
         } if (karen.x+ karen.width < 0){
             karens.splice(idKaren,1)
@@ -288,14 +306,20 @@ function drawKarens () {
             ctx.drawImage(collisionImg, doctor.rightLimit-10, doctor.y + doctor.height/4, 50,50)
             requestId = undefined
         }
+
+        colissions.forEach(function (boom, iB){
+            boom.draw();
+        })
+
         vaccines.forEach(function (vaccine, iV) {
             if (vaccine.collision(karen)) {
                 vaccines.splice(iV,1);
                 vaccine.hit(karen);
-            };
-            console.log(vaccine)
-            vaccine.draw();
+            } else {vaccine.draw(
+            )};
         })
+        
+        
     });
 };
 
@@ -327,4 +351,5 @@ addEventListener("keydown", function (event) {
         requestId = requestAnimationFrame(start)
     }
 }) 
+
 
